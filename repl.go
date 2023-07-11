@@ -13,7 +13,7 @@ func startRepl() {
 
 	for {
 		// show a pointer to indicate to type
-		fmt.Print(" Pokedexcli > ")
+		fmt.Print(" Pokedexcli~> ")
 
 		// intiate a scanner,get the input and point it to text
 		scanner.Scan()
@@ -61,6 +61,11 @@ func getCommands() map[string]cliCommand {
 			name:        "exit",
 			description: "stops the pokedexcli",
 			callBack:    callbackExit,
+		},
+		"map": {
+			name:        "map",
+			description: "list available location",
+			callBack:    callBackMap,
 		},
 	}
 }
