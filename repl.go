@@ -13,7 +13,7 @@ func startRepl() {
 
 	for {
 		// show a pointer to indicate to type
-		fmt.Print(" > ")
+		fmt.Print(" Pokedexcli > ")
 
 		// intiate a scanner,get the input and point it to text
 		scanner.Scan()
@@ -26,26 +26,43 @@ func startRepl() {
 		if len(cleaned) == 0 {
 			continue
 		}
+		commandName := cleaned[0]
 
-		// switch to check the command that was inputed
-		command := cleaned[0]
-		switch command {
-		case "help":
-			fmt.Println("Welcome pokedex help menu!")
-			fmt.Println("here are your available commands")
-			fmt.Println(" - help")
-			fmt.Println(" - exit")
-			fmt.Println("")
-		case "exit":
-			os.Exit(0)
-		default:
+		availableCommands := getCommands()
+
+		command, ok := availableCommands[commandName]
+		if !ok {
 			fmt.Println("Invalid Command")
+			continue
 		}
+		command.callBack()
 
 		// print the word that was inputed
-		fmt.Println("echo,", cleaned)
+		// fmt.Println("echo,", cleaned)
 	}
 
+}
+
+type cliCommand struct {
+	name        string
+	description string
+	callBack    func() error
+}
+
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
+		"help": {
+			name:        "help",
+			description: "prints the help menu",
+			callBack:    callbackHelp,
+		},
+
+		"exit": {
+			name:        "exit",
+			description: "stops the pokedexcli",
+			callBack:    callbackExit,
+		},
+	}
 }
 
 // clear the user input
