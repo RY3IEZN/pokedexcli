@@ -1,17 +1,15 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"log"
-	"pokedexcli/internal/pokeapi"
 )
 
-func callBackMap() error {
-	pokeapiClient := pokeapi.NewClient()
+func callBackMap(cfg *config) error {
 
-	resp, err := pokeapiClient.ListLocationArea()
+	resp, err := cfg.pokeapiClient.ListLocationArea(cfg.nextLocationAreaUrl)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Print(err)
 	}
 
 	fmt.Println("Available Location areas: ")
@@ -19,5 +17,27 @@ func callBackMap() error {
 		fmt.Printf(" - %s \n", area.Name)
 
 	}
+	cfg.nextLocationAreaUrl = resp.Next
+	cfg.prevLocationAreaUrl = resp.Previous
+	return nil
+}
+
+func callBackMapb(cfg *config) error {
+
+	if cfg.prevLocationAreaUrl == nil {
+		return errors.New("you are on the firstpage")
+	}
+	resp, err := cfg.pokeapiClient.ListLocationArea(cfg.prevLocationAreaUrl)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	fmt.Println("Available Location areas: ")
+	for _, area := range resp.Results {
+		fmt.Printf(" - %s \n", area.Name)
+
+	}
+	cfg.nextLocationAreaUrl = resp.Next
+	cfg.prevLocationAreaUrl = resp.Previous
 	return nil
 }

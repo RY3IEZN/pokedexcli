@@ -8,7 +8,7 @@ import (
 )
 
 // intiate the scanner and get the user input
-func startRepl() {
+func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -35,7 +35,11 @@ func startRepl() {
 			fmt.Println("Invalid Command")
 			continue
 		}
-		command.callBack()
+
+		err := command.callBack(cfg)
+		if err != nil {
+			fmt.Print(err)
+		}
 
 		// print the word that was inputed
 		// fmt.Println("echo,", cleaned)
@@ -46,7 +50,7 @@ func startRepl() {
 type cliCommand struct {
 	name        string
 	description string
-	callBack    func() error
+	callBack    func(*config) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -66,6 +70,11 @@ func getCommands() map[string]cliCommand {
 			name:        "map",
 			description: "list available location",
 			callBack:    callBackMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "list previous locations",
+			callBack:    callBackMapb,
 		},
 	}
 }

@@ -7,9 +7,13 @@ import (
 	"net/http"
 )
 
-func (c *Client) ListLocationArea() (LocationAreaResp, error) {
+func (c *Client) ListLocationArea(pageUrl *string) (LocationAreaResp, error) {
 	endpoint := "/location-area"
 	fullUrl := baseUrl + endpoint
+
+	if pageUrl != nil {
+		fullUrl = *pageUrl
+	}
 
 	// make a request, if err return an empty slice
 	req, err := http.NewRequest("GET", fullUrl, nil)
