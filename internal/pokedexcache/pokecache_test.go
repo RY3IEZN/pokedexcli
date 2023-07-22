@@ -1,16 +1,19 @@
 package pokedexcache
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestCreateCache(t *testing.T) {
-	cache := NewCache()
+	cache := NewCache(time.Millisecond)
 	if cache.cache == nil {
 		t.Error("cache is nil")
 	}
 }
 
 func TestAddCache(t *testing.T) {
-	cache := NewCache()
+	cache := NewCache(time.Millisecond)
 	cache.Add("keyA", []byte("valA"))
 	actual, ok := cache.Get("keyA")
 	if !ok {
