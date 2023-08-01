@@ -62,3 +62,55 @@ func (c *Client) ListLocationArea(pageUrl *string) (LocationAreaResp, error) {
 	c.cache.Add(fullUrl, data)
 	return locationAreasResp, nil
 }
+
+func (c *Client) GetLocationArea(locationAreaName string) (LocationArea, error) {
+	endpoint := "/location-area/" + locationAreaName
+	fullUrl := baseUrl + endpoint
+
+	// check the cache
+	data, ok := c.cache.Get(fullUrl)
+	if ok {
+		fmt.Println("CACHE HIT")
+		// if we get a cache hit
+		locationArea := LocationArea{}
+		err := json.Unmarshal(data, &locationArea)
+		if err != nil {
+			return LocationArea{}, err
+		}
+
+		return locationArea, nil
+	}
+	fmt.Println("CACHE MISS")
+
+	// make a request, if err return an empty slice
+	req, err := http.NewRequest("GET", fullUrl, nil)
+	if err != nil {
+		return LocationArea{}, err
+	}
+
+	// actually make a request, if err return an empty slice
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return LocationArea{}, err
+	}
+
+	// check the statuscode, if err, you know what to do
+	if resp.StatusCode > 399 {
+		return LocationArea{}, fmt.Errorf("bad status code: %v", resp.StatusCode)
+	}
+
+	// get the data from res.body, if err... i dont need to repeat this
+	data, err = io.ReadAll(resp.Body)
+	if err != nil {
+		return LocationArea{}, err
+	}
+
+	locationArea := LocationArea{}
+	err = json.Unmarshal(data, &locationArea)
+	if err != nil {
+		return LocationArea{}, err
+	}
+
+	c.cache.Add(fullUrl, data)
+	return locationArea, nil
+}

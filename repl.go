@@ -13,7 +13,7 @@ func startRepl(cfg *config) {
 
 	for {
 		// show a pointer to indicate to type
-		fmt.Print(" Pokedexcli~> ")
+		fmt.Print("Pokedexcli~> ")
 
 		// intiate a scanner,get the input and point it to text
 		scanner.Scan()
@@ -27,6 +27,10 @@ func startRepl(cfg *config) {
 			continue
 		}
 		commandName := cleaned[0]
+		args := []string{}
+		if len(cleaned) > 1 {
+			args = cleaned[1:]
+		}
 
 		availableCommands := getCommands()
 
@@ -36,7 +40,7 @@ func startRepl(cfg *config) {
 			continue
 		}
 
-		err := command.callBack(cfg)
+		err := command.callBack(cfg, args...)
 		if err != nil {
 			fmt.Print(err)
 		}
@@ -50,7 +54,7 @@ func startRepl(cfg *config) {
 type cliCommand struct {
 	name        string
 	description string
-	callBack    func(*config) error
+	callBack    func(*config, ...string) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -75,6 +79,11 @@ func getCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "list previous locations",
 			callBack:    callBackMapb,
+		},
+		"explore": {
+			name:        "exolore {location-area-name}",
+			description: "List the Pokemons in an area",
+			callBack:    callBackExplore,
 		},
 	}
 }

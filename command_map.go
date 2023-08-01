@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func callBackMap(cfg *config) error {
+func callBackMap(cfg *config, args ...string) error {
 
 	resp, err := cfg.pokeapiClient.ListLocationArea(cfg.nextLocationAreaUrl)
 	if err != nil {
@@ -22,7 +22,7 @@ func callBackMap(cfg *config) error {
 	return nil
 }
 
-func callBackMapb(cfg *config) error {
+func callBackMapb(cfg *config, args ...string) error {
 
 	if cfg.prevLocationAreaUrl == nil {
 		return errors.New("you are on the firstpage")
