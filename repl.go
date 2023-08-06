@@ -61,29 +61,34 @@ func getCommands() map[string]cliCommand {
 	return map[string]cliCommand{
 		"help": {
 			name:        "help",
-			description: "prints the help menu",
+			description: "Prints the help menu",
 			callBack:    callbackHelp,
 		},
 
 		"exit": {
 			name:        "exit",
-			description: "stops the pokedexcli",
+			description: "Stops the pokedexcli",
 			callBack:    callbackExit,
 		},
 		"map": {
 			name:        "map",
-			description: "list available location",
+			description: "List available location",
 			callBack:    callBackMap,
 		},
 		"mapb": {
 			name:        "mapb",
-			description: "list previous locations",
+			description: "List previous locations",
 			callBack:    callBackMapb,
 		},
 		"explore": {
-			name:        "exolore {location-area-name}",
+			name:        "explore {location-area-name}",
 			description: "List the Pokemons in an area",
 			callBack:    callBackExplore,
+		},
+		"catch": {
+			name:        "catch {pokemon_name}",
+			description: "Attempt to catch a pokemon and add it to your pokedex",
+			callBack:    callBackCatch,
 		},
 	}
 }
